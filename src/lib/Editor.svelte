@@ -1,6 +1,7 @@
 <script lang="ts">
     import CodeMirror from "svelte-codemirror-editor";
     import { javascript } from "@codemirror/lang-javascript";
+    import {oneDark} from "@codemirror/theme-one-dark"
 
     let value = "";
     let counter = 0
@@ -12,7 +13,7 @@
 
 <div class="title">CodeMirror6 Editor {counter}</div>
 
-<CodeMirror bind:value lang={javascript()} />
+<CodeMirror bind:value lang={javascript()} theme={oneDark} />
 
 <style>
     .title {
