@@ -2,40 +2,106 @@
     import CodeMirror from "svelte-codemirror-editor";
     import { javascript } from "@codemirror/lang-javascript";
     import {oneDark} from "@codemirror/theme-one-dark"
+	import { onMount } from 'svelte';
 
-    let value = `
-// press 'run' button to execute the code!
+
+    let value = `// press 'run' button to execute the code!
 const node = document.getElementById('toto')
 node.style.color = 'red'
 node.style.textAlign = 'center'
-`
+let counter = 0
+function print(param, n = node) {
+  node.innerHTML += param
+}
+setInterval( ()=> {
+  node.innerHTML = counter++
+  print('<br>coucou')
+}, 1000)
+    `
+
+    let code = undefined
     let counter = 0
     let errorState = "no error"
+    let mounted = false
 
-    function evaluate(code,fromId) {
-        const fn = new Function(["myId"], code);
-        let result = "ok";
+    onMount( ()=> {
+        code = loadFromBrowserLocalStorage()
+
+        if (code) {
+            value = code;
+        }
+        mounted = true
+    })
+
+    $: evaluateCode(value)
+
+    ///////////////////
+    //
+    // utils...
+    //
+    function loadFromBrowserLocalStorage() {
+
+    }
+
+    function saveToBrowserLocalStorage(code) {
+        if ( typeof localStorage !== 'undefined') {
+            localStorage.setItem("mysupercomputer-code", code);
+            console.log('#########')
+            console.log("# SAVED #")
+            console.log("#########")
+            console.log("###")
+            console.log("##")
+            console.log("#")
+            console.log(code)
+        }
+    }
+
+
+    function resetUI() {
+        return;
+        let ui = document.getElementById('toto');
+        removeChildren(ui)
+        //ui.style.overflowY = '';
+        //ui.style.height = '';
+    }
+
+    function resetTimers() {
+        let maxId = setTimeout(function () {}, 0);
+
+        for (var i = 0; i < maxId; i += 1) {
+        clearTimeout(i);
+        }
+    }
+
+    const evaluateCode = (code) => {
+        if (!mounted) return
+
+        resetUI();
+        resetTimers();
+        saveToBrowserLocalStorage(code)
+
         try {
-            errorState = "NO ERROR"
-            fn(fromId);
-        } catch (error) {
-            console.error("#ERROR# in Editor.svelte :", error);
-            errorState = "ERROR"
+            errorState = '✅ NO ERROR ✅'
+            Function(code)(window);
+        } catch (err) {
+            errorState = '❌ ERROR ❌!'
+            console.log('#########################')
+            console.log('# EDITOR EVALUATE ERROR #')
+            console.log('#########################')
+            console.log('###')
+            console.log('##')
+            console.log('#')
+            console.error(err);
         }
     };
+    //
+    // utils...
+    //
+    ///////////////////
 
-/*
-    setInterval( ()=> {
-        counter++
-        console.log({value})
-
-    },1000)*/
 </script>
 
 <div class="title">CodeMirror6 {counter}<br>{errorState}</div>
-<div class='run-button'>
-    <button on:click={evaluate(value,"null")}>run</button>
-</div>
 
 <CodeMirror bind:value lang={javascript()} theme={oneDark} />
 
@@ -45,9 +111,6 @@ toto
 
 <style>
     .title {
-        text-align: center;
-    }
-    .run-button {
         text-align: center;
     }
 </style>
