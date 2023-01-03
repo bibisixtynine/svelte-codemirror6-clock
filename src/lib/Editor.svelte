@@ -40,6 +40,17 @@ setInterval( ()=> {
     // utils...
     //
     function loadFromBrowserLocalStorage() {
+        if ( typeof localStorage !== 'undefined') {
+            let code = localStorage.getItem("mysupercomputer-code")
+            console.log('#########')
+            console.log("# LOADED #")
+            console.log("#########")
+            console.log("###")
+            console.log("##")
+            console.log("#")
+            console.log(code)
+            return code
+        }
 
     }
 
