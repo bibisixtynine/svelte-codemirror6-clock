@@ -1,3 +1,3 @@
 # svelte-codemirror6-clock-eval
 
-[Edit on StackBlitz ⚡️](https://stackblitz.com/edit/sveltejs-kit-template-default-cn5mid)
+[![Open in Codeflow](https://developer.stackblitz.com/img/open_in_codeflow.svg)](https:///pr.new/bibisixtynine/svelte-codemirror6-clock)
